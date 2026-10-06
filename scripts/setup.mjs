@@ -32,11 +32,6 @@ writeFileSync(
   { mode: 0o600 },
 );
 chmodSync(destination, 0o600);
-writeFileSync(
-  resolve(root, "server/access.txt"),
-  `Mailroom — configuration locale\nMot de passe : ${password}\n\nNe pas partager ce fichier ni la clé Resend.\n`,
-  { mode: 0o600 },
-);
 console.log(
-  `Clé importée sans l’afficher. Domaines : ${domains.join(", ")}. Mot de passe dans server/access.txt (permissions 600).`,
+  `Configuration écrite dans server/.env. Domaines détectés : ${domains.join(", ")}. Le mot de passe est dans APP_PASSWORD.`,
 );
