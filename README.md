@@ -31,16 +31,65 @@ npm run setup
 
 `npm run setup` récupère la clé du profil Resend local, détecte les domaines vérifiés et écrit la configuration dans `server/.env`. Le mot de passe reste lui aussi dans `server/.env`.
 
-## Lancer Mailroom
+## Lancer Mailroom avec Expo
 
 ```bash
 npm run server:start
 npm start
 ```
 
-Expo affiche une URL et un QR code. Tu peux ouvrir Mailroom avec `w` dans un navigateur, scanner le QR code avec Expo Go sur le même réseau, ou utiliser un émulateur Android/iOS.
+`npm start` lance le serveur Expo et affiche une URL ainsi qu'un QR code.
+
+Commandes Expo disponibles :
+
+```bash
+npm start                 # menu Expo
+npm run web               # version web
+npm run android           # émulateur ou appareil Android
+npm run ios               # simulateur iOS sur macOS
+npx expo start --go       # ouvrir avec Expo Go
+```
+
+Pour utiliser Expo Go sur un téléphone, installe Expo Go, connecte le téléphone et l'ordinateur au même réseau, puis scanne le QR code affiché par `npm start`.
 
 Dans l’application, indique l’adresse du backend, généralement `http://localhost:3035` sur l’ordinateur qui l’héberge, puis le mot de passe `APP_PASSWORD`.
+
+## Build web, iOS et Android
+
+Exporter la version web :
+
+```bash
+npm run build
+```
+
+Préparer les bundles JavaScript natifs :
+
+```bash
+npm run export:native
+```
+
+Pour compiler et installer localement une application Android, il faut Android Studio et un émulateur ou un appareil configuré :
+
+```bash
+npx expo run:android
+```
+
+Pour iOS, il faut macOS et Xcode :
+
+```bash
+npx expo run:ios
+```
+
+Pour créer des applications installables dans le cloud avec EAS Build :
+
+```bash
+npx expo login
+npx eas-cli build:configure
+npx eas-cli build --platform android
+npx eas-cli build --platform ios
+```
+
+EAS demande un compte Expo. Le build iOS nécessite également un compte Apple Developer pour signer l’application.
 
 ## Données locales
 
