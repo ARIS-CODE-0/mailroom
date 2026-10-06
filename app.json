@@ -24,7 +24,7 @@
       "favicon": "./assets/favicon.png",
       "name": "Mailroom"
     },
-    "plugins": ["expo-sharing", "expo-secure-store", "expo-font"],
+    "plugins": ["expo-secure-store", "expo-font"],
     "scheme": "mailroom"
   }
 }

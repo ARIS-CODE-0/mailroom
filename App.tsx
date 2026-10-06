@@ -6,6 +6,7 @@ import {
   Platform,
   Pressable,
   RefreshControl,
+  Share,
   ScrollView,
   Text,
   TextInput,
@@ -15,7 +16,6 @@ import {
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import * as FileSystem from "expo-file-system/legacy";
-import * as Sharing from "expo-sharing";
 import * as Crypto from "expo-crypto";
 import { api, productName, productTagline } from "./src/api";
 import { C, s } from "./src/styles";
@@ -268,12 +268,10 @@ function MailApp() {
         await FileSystem.writeAsStringAsync(uri, file.content!, {
           encoding: FileSystem.EncodingType.Base64,
         });
-        if (await Sharing.isAvailableAsync())
-          await Sharing.shareAsync(uri, { mimeType: file.content_type });
-        else
-          throw new Error(
-            "Le partage de fichiers est indisponible sur cet appareil.",
-          );
+        await Share.share({
+          url: uri,
+          message: file.filename,
+        });
       }
     } catch (e) {
       report(e);
