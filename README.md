@@ -115,6 +115,8 @@ npm run test:e2e
 
 Les tests utilisent un faux transport email et n’envoient pas de message réel.
 
+Le backend (`npm audit --prefix server --omit=dev`) ne présente aucune vulnérabilité. Le graphe Expo/Metro de développement peut encore être signalé par `npm audit` à cause de dépendances transitives de l'outillage natif ; Expo SDK 57 est à jour (`57.0.27`) et `npx expo-doctor` passe. N'utilise pas `npm audit fix --force`, qui propose des versions incompatibles avec Expo.
+
 ## Sécurité et périmètre
 
 Ne publie jamais `server/.env`, une base SQLite, une sauvegarde ou un journal. La clé Resend reste uniquement dans le backend ; elle n’est jamais incluse dans l’application Expo.
