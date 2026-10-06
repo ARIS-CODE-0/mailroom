@@ -1,0 +1,30 @@
+{
+  "expo": {
+    "name": "Mailroom",
+    "slug": "mailroom",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.example.mailroom"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#E6F4FE",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false,
+      "package": "com.example.mailroom"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "name": "Mailroom"
+    },
+    "plugins": ["expo-sharing", "expo-secure-store", "expo-font"],
+    "scheme": "mailroom"
+  }
+}

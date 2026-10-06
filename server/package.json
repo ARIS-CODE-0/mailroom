@@ -1,0 +1,1 @@
+{"name":"mailroom-server","private":true,"type":"module","scripts":{"start":"node --env-file=.env index.mjs","test":"node --test test/*.test.mjs"},"dependencies":{"express":"^5.1.0","express-rate-limit":"^8.1.0","helmet":"^8.1.0","html-to-text":"^9.0.5","zod":"^4.1.0"}}

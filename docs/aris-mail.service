@@ -1,0 +1,18 @@
+[Unit]
+Description=Aris Mail API et synchronisation Resend
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=codex
+WorkingDirectory=/home/codex/mail_app
+ExecStart=/home/codex/.nvm/versions/node/v24.21.0/bin/node --env-file=/home/codex/mail_app/server/.env /home/codex/mail_app/server/index.mjs
+Restart=on-failure
+RestartSec=5
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
