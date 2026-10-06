@@ -140,12 +140,12 @@ La commande `backup` crée une copie SQLite cohérente dans `server/data/backups
 
 ### Service au redémarrage
 
-Une unité systemd est fournie dans `docs/aris-mail.service`. Son installation nécessite un administrateur :
+Une unité systemd est fournie dans `docs/mailroom.service`. Son installation nécessite un administrateur :
 
 ```bash
 cd /path/to/mailroom-open-source
 npm run server:stop
-sudo cp docs/aris-mail.service /etc/systemd/system/mailroom.service
+sudo cp docs/mailroom.service /etc/systemd/system/mailroom.service
 sudo systemctl daemon-reload
 sudo systemctl enable --now mailroom
 ```
