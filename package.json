@@ -49,5 +49,10 @@
     "tailscale:stop": "node scripts/service.mjs stop tailscale",
     "lint": "expo lint"
   },
+  "overrides": {
+    "xcode": {
+      "uuid": "11.1.1"
+    }
+  },
   "private": true
 }
