@@ -13,18 +13,18 @@ export const productTagline =
   process.env.EXPO_PUBLIC_APP_TAGLINE || "Your domain. Your inbox.";
 export const storage = {
   async get(key: string) {
-    const scoped = `mailroom:${key}`;
+    const scoped = `mailroom_${key}`;
     return Platform.OS === "web"
       ? sessionStorage.getItem(scoped)
       : SecureStore.getItemAsync(scoped);
   },
   async set(key: string, value: string) {
-    const scoped = `mailroom:${key}`;
+    const scoped = `mailroom_${key}`;
     if (Platform.OS === "web") sessionStorage.setItem(scoped, value);
     else await SecureStore.setItemAsync(scoped, value);
   },
   async remove(key: string) {
-    const scoped = `mailroom:${key}`;
+    const scoped = `mailroom_${key}`;
     if (Platform.OS === "web") sessionStorage.removeItem(scoped);
     else await SecureStore.deleteItemAsync(scoped);
   },
