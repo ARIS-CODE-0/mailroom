@@ -1,5 +1,14 @@
 # Mailroom
 
+[![Expo](https://img.shields.io/badge/Expo-57.0.27-000020?logo=expo&logoColor=white)](https://expo.dev/)
+[![React Native](https://img.shields.io/badge/React%20Native-0.86.3-61DAFB?logo=react&logoColor=20232a)](https://reactnative.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-6.0.3-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-20%2B-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
+[![Express](https://img.shields.io/badge/Express-5-000000?logo=express&logoColor=white)](https://expressjs.com/)
+[![SQLite](https://img.shields.io/badge/SQLite-Local%20database-003B57?logo=sqlite&logoColor=white)](https://www.sqlite.org/)
+[![Resend](https://img.shields.io/badge/Resend-Email%20API-000000?logoColor=white)](https://resend.com/)
+[![Tailscale](https://img.shields.io/badge/Tailscale-Optional-242424?logo=tailscale&logoColor=white)](https://tailscale.com/)
+
 Mailroom est une application Expo qui permet d’envoyer et de recevoir des emails avec son propre domaine grâce à Resend.
 
 ## Installation
