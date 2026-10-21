@@ -52,7 +52,8 @@ workflows:
           app_path="build/Mailroom.xcarchive/Products/Applications/Mailroom.app"
           # Catch simulator builds or a missing embedded JS bundle before export.
           test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleSupportedPlatforms:0' "$app_path/Info.plist")" = "iPhoneOS"
-          xcrun lipo -verify_arch arm64 "$app_path/Mailroom"
+          # lipo treats every argument after -verify_arch as an architecture.
+          xcrun lipo "$app_path/Mailroom" -verify_arch arm64
           test -s "$app_path/main.jsbundle"
           mkdir -p build/unsigned/Payload build/artifacts
           ditto "$app_path" build/unsigned/Payload/Mailroom.app
