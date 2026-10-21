@@ -152,13 +152,22 @@ npx eas-cli build --platform ios
 
 EAS demande un compte Expo. Le build iOS nécessite également un compte Apple Developer pour signer l’application.
 
-### Premier build avec Codemagic
+### Builds iOS avec Codemagic
 
-Le fichier `codemagic.yaml` à la racine définit le workflow `android-preview` : installation reproductible avec `npm ci`, lint, typage, tests du serveur, puis génération et compilation Android. Il utilise Node.js 24 et Java 17.
+Le fichier `codemagic.yaml` à la racine définit deux workflows iOS sur macOS avec Xcode 26.6 et Node.js 24. Ils installent les dépendances avec `npm ci`, exécutent le lint, le typage et les tests serveur, puis génèrent le projet iOS avec Expo et installent les dépendances CocoaPods.
 
-Dans Codemagic, sélectionne la branche `main`, clique sur **Check for configuration file**, puis sur **Start new build** et choisis **Mailroom Android APK**. Le lancement est manuel. À la fin du build, télécharge l’APK dans les artefacts.
+Pour installer sur un **iPhone**, utilise **Mailroom iOS - iPhone (Ad Hoc)** (`ios-device`). Avant le premier build :
 
-L’APK contient le JavaScript et utilise la clé de signature de test du modèle Expo. Il sert aux essais sur un appareil Android ; une publication Google Play nécessitera une clé de signature privée et un workflow de distribution. Le backend doit être hébergé séparément : dans l’application, renseigne son URL accessible depuis le téléphone et ton mot de passe. Aucune clé Resend ni configuration `server/.env` n’est nécessaire pour compiler.
+1. Avec ton compte Apple Developer Program, enregistre un identifiant d’application disponible. Remplace `com.example.mailroom` dans `app.json` (`expo.ios.bundleIdentifier`) et dans `codemagic.yaml` (`ios_signing.bundle_identifier`) par cet identifiant.
+2. Enregistre les UDID des iPhone de test dans Apple Developer et crée un profil de provisioning **Ad Hoc** pour cet identifiant et ces appareils.
+3. Dans **Codemagic Team settings > Code signing identities**, importe le certificat **Apple Distribution** avec sa clé privée (`.p12`) et le profil Ad Hoc correspondant (`.mobileprovision`), ou utilise les options de génération/récupération de Codemagic. Conserve ces fichiers et leurs mots de passe hors du dépôt.
+4. Sur la branche `main`, clique sur **Check for configuration file**, puis **Start new build** et sélectionne **Mailroom iOS - iPhone (Ad Hoc)**. Télécharge le `.ipa` dans les artefacts et installe-le sur un iPhone enregistré à l’aide d’Apple Configurator ou d’un service de distribution Ad Hoc. Un lien brut vers le `.ipa` ne suffit pas à l’installer depuis Safari.
+
+Pour compiler sans certificat Apple, sélectionne **Mailroom iOS - Simulator** (`ios-simulator`). L’archive `Mailroom-ios-simulator.zip` contient une application réservée au simulateur iOS sur Mac ; elle ne s’installe pas sur un iPhone. Après extraction, démarre un simulateur puis utilise `xcrun simctl install booted /chemin/vers/Mailroom.app`.
+
+Les deux workflows embarquent le JavaScript. Pour distribuer via TestFlight ou l’App Store, il faudra un profil **App Store**, une fiche App Store Connect et un workflow de publication adapté. Les [instructions Codemagic de signature iOS](https://docs.codemagic.io/yaml-code-signing/signing-ios/) détaillent la configuration des certificats et profils.
+
+Le backend doit être hébergé séparément : dans l’application, renseigne son URL accessible depuis le téléphone (HTTPS recommandé) et ton mot de passe. Aucune clé Resend ni configuration `server/.env` n’est nécessaire pour compiler.
 
 ## Données locales
 
