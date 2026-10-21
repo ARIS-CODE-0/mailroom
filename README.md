@@ -152,6 +152,14 @@ npx eas-cli build --platform ios
 
 EAS demande un compte Expo. Le build iOS nécessite également un compte Apple Developer pour signer l’application.
 
+### Premier build avec Codemagic
+
+Le fichier `codemagic.yaml` à la racine définit le workflow `android-preview` : installation reproductible avec `npm ci`, lint, typage, tests du serveur, puis génération et compilation Android. Il utilise Node.js 24 et Java 17.
+
+Dans Codemagic, sélectionne la branche `main`, clique sur **Check for configuration file**, puis sur **Start new build** et choisis **Mailroom Android APK**. Le lancement est manuel. À la fin du build, télécharge l’APK dans les artefacts.
+
+L’APK contient le JavaScript et utilise la clé de signature de test du modèle Expo. Il sert aux essais sur un appareil Android ; une publication Google Play nécessitera une clé de signature privée et un workflow de distribution. Le backend doit être hébergé séparément : dans l’application, renseigne son URL accessible depuis le téléphone et ton mot de passe. Aucune clé Resend ni configuration `server/.env` n’est nécessaire pour compiler.
+
 ## Données locales
 
 Au premier démarrage du backend, SQLite crée automatiquement `server/data/mail.sqlite`. Cette base contient les emails synchronisés, les brouillons, les préférences et le cache des pièces jointes. Le dossier `server/data/` est ignoré par Git et reste local à chaque installation.

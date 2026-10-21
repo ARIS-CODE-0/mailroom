@@ -1,0 +1,39 @@
+# Android preview build. Start manually from the Codemagic dashboard.
+# Expo generates the native project on the build machine (CNG).
+workflows:
+  android-preview:
+    name: Mailroom Android APK
+    instance_type: linux_x2
+    max_build_duration: 60
+    environment:
+      node: 24.21.0
+      java: 17
+      vars:
+        CI: "1"
+        EXPO_NO_TELEMETRY: "1"
+    scripts:
+      - name: Install app and server dependencies
+        script: |
+          set -eu
+          npm ci
+          npm ci --prefix server
+      - name: Check lint, types and server tests
+        script: |
+          set -eu
+          npm run lint
+          npm run typecheck
+          npm test
+      - name: Generate Android project with Expo
+        script: |
+          set -eu
+          npx expo prebuild --platform android --no-install
+      - name: Build standalone preview APK
+        script: |
+          set -eu
+          cd android
+          # The generated Expo template signs release builds with its debug key.
+          # This APK embeds the JS bundle and is for testing, not Google Play.
+          ./gradlew app:assembleRelease --no-daemon
+    artifacts:
+      - android/app/build/outputs/apk/release/*.apk
+      - android/app/build/outputs/mapping/release/mapping.txt
