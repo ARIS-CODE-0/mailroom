@@ -156,16 +156,19 @@ EAS demande un compte Expo. Le build iOS nécessite également un compte Apple D
 
 Le fichier `codemagic.yaml` à la racine définit deux workflows iOS sur macOS avec Xcode 26.6 et Node.js 24. Ils installent les dépendances avec `npm ci`, exécutent le lint, le typage et les tests serveur, puis génèrent le projet iOS avec Expo et installent les dépendances CocoaPods.
 
-Pour installer sur un **iPhone**, utilise **Mailroom iOS - iPhone (Ad Hoc)** (`ios-device`). Avant le premier build :
+Pour installer sur ton **iPhone avec un compte Apple gratuit et un PC Windows**, utilise **Mailroom iOS - Unsigned IPA (Sideloadly)** (`ios-unsigned`). Codemagic compile une application pour appareil physique (`iphoneos`, ARM64) sans signature Apple, puis crée `Mailroom-unsigned.ipa` avec la structure `Payload/Mailroom.app`. La signature se fait ensuite sur ton PC ; aucun certificat, profil de provisioning ou compte Apple n’est nécessaire dans Codemagic pour ce workflow.
 
-1. Avec ton compte Apple Developer Program, enregistre un identifiant d’application disponible. Remplace `com.example.mailroom` dans `app.json` (`expo.ios.bundleIdentifier`) et dans `codemagic.yaml` (`ios_signing.bundle_identifier`) par cet identifiant.
-2. Enregistre les UDID des iPhone de test dans Apple Developer et crée un profil de provisioning **Ad Hoc** pour cet identifiant et ces appareils.
-3. Dans **Codemagic Team settings > Code signing identities**, importe le certificat **Apple Distribution** avec sa clé privée (`.p12`) et le profil Ad Hoc correspondant (`.mobileprovision`), ou utilise les options de génération/récupération de Codemagic. Conserve ces fichiers et leurs mots de passe hors du dépôt.
-4. Sur la branche `main`, clique sur **Check for configuration file**, puis **Start new build** et sélectionne **Mailroom iOS - iPhone (Ad Hoc)**. Télécharge le `.ipa` dans les artefacts et installe-le sur un iPhone enregistré à l’aide d’Apple Configurator ou d’un service de distribution Ad Hoc. Un lien brut vers le `.ipa` ne suffit pas à l’installer depuis Safari.
+1. Dans Codemagic, sur la branche `main`, clique sur **Check for configuration file**, puis **Start new build** et sélectionne **Mailroom iOS - Unsigned IPA (Sideloadly)**.
+2. Une fois le build réussi, télécharge `Mailroom-unsigned.ipa` dans les artefacts sur ton PC Windows.
+3. Installe [Sideloadly depuis son site officiel](https://sideloadly.io/) et les composants Apple Windows demandés par ses instructions. Branche ton iPhone en USB, déverrouille-le et accepte de faire confiance à l’ordinateur.
+4. Ouvre Sideloadly, sélectionne ton iPhone, glisse le fichier `.ipa`, renseigne ton compte Apple dans Sideloadly et lance la signature/installation avec **Start**. Si l’identifiant `com.example.mailroom` est refusé ou déjà utilisé, choisis un identifiant personnel dans les options avancées et conserve-le lors des renouvellements.
+5. Sur l’iPhone, active le **Mode développeur** dans **Réglages > Confidentialité et sécurité** si demandé, et approuve le profil développeur dans **Réglages > Général > VPN et gestion de l’appareil** si nécessaire.
+
+Avec un compte gratuit, la signature expire après **7 jours** et le nombre d’applications sideloadées est limité à **3**. Renouvelle avec le même compte Apple et le même identifiant d’application ; Sideloadly propose aussi un renouvellement automatique lorsque le PC et l’iPhone sont disponibles. Consulte sa [FAQ officielle](https://sideloadly.io/faq) pour les conditions et le dépannage. Le logiciel s’utilise sur Windows ou macOS ; pour ce parcours depuis Linux, effectue l’étape de signature sur ton PC Windows. L’IPA non signé ne s’installe pas directement depuis Safari.
 
 Pour compiler sans certificat Apple, sélectionne **Mailroom iOS - Simulator** (`ios-simulator`). L’archive `Mailroom-ios-simulator.zip` contient une application réservée au simulateur iOS sur Mac ; elle ne s’installe pas sur un iPhone. Après extraction, démarre un simulateur puis utilise `xcrun simctl install booted /chemin/vers/Mailroom.app`.
 
-Les deux workflows embarquent le JavaScript. Pour distribuer via TestFlight ou l’App Store, il faudra un profil **App Store**, une fiche App Store Connect et un workflow de publication adapté. Les [instructions Codemagic de signature iOS](https://docs.codemagic.io/yaml-code-signing/signing-ios/) détaillent la configuration des certificats et profils.
+Les deux workflows embarquent le JavaScript. Pour distribuer via TestFlight ou l’App Store, il faudra une adhésion Apple Developer Program, un profil **App Store**, une fiche App Store Connect et un workflow de publication adapté. Les [instructions Codemagic de signature iOS](https://docs.codemagic.io/yaml-code-signing/signing-ios/) détaillent ce parcours distinct.
 
 Le backend doit être hébergé séparément : dans l’application, renseigne son URL accessible depuis le téléphone (HTTPS recommandé) et ton mot de passe. Aucune clé Resend ni configuration `server/.env` n’est nécessaire pour compiler.
 

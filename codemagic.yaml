@@ -1,20 +1,14 @@
 # iOS builds. Start manually from the Codemagic dashboard.
 # Expo generates the native project on the build machine (CNG).
 workflows:
-  ios-device:
-    name: Mailroom iOS - iPhone (Ad Hoc)
+  ios-unsigned:
+    name: Mailroom iOS - Unsigned IPA (Sideloadly)
     instance_type: mac_mini_m2
     max_build_duration: 60
     environment:
       node: 24.21.0
       xcode: "26.6"
       cocoapods: default
-      # Upload an Apple Distribution certificate and a matching Ad Hoc profile
-      # in Codemagic Team settings > Code signing identities before building.
-      # Keep this identifier aligned with expo.ios.bundleIdentifier in app.json.
-      ios_signing:
-        distribution_type: ad_hoc
-        bundle_identifier: com.example.mailroom
       vars:
         CI: "1"
         EXPO_NO_TELEMETRY: "1"
@@ -39,19 +33,36 @@ workflows:
           npx expo prebuild --platform ios --no-install
           cd ios
           pod install
-      - name: Apply iOS provisioning profiles
+      - name: Archive unsigned iPhone app
         script: |
           set -eu
-          xcode-project use-profiles
-      - name: Build signed iPhone IPA
+          xcodebuild archive \
+            -workspace ios/Mailroom.xcworkspace \
+            -scheme Mailroom \
+            -configuration Release \
+            -sdk iphoneos \
+            -destination 'generic/platform=iOS' \
+            -archivePath build/Mailroom.xcarchive \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO
+      - name: Package device app as an unsigned IPA for Sideloadly
         script: |
           set -eu
-          xcode-project build-ipa \
-            --workspace ios/Mailroom.xcworkspace \
-            --scheme Mailroom
+          app_path="build/Mailroom.xcarchive/Products/Applications/Mailroom.app"
+          # Catch simulator builds or a missing embedded JS bundle before export.
+          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleSupportedPlatforms:0' "$app_path/Info.plist")" = "iPhoneOS"
+          xcrun lipo -verify_arch arm64 "$app_path/Mailroom"
+          test -s "$app_path/main.jsbundle"
+          mkdir -p build/unsigned/Payload build/artifacts
+          ditto "$app_path" build/unsigned/Payload/Mailroom.app
+          # IPA is a ZIP with Payload/<App>.app at its root. Do not exportArchive:
+          # signing and provisioning happen later in Sideloadly on Windows.
+          ditto -c -k --keepParent build/unsigned/Payload build/artifacts/Mailroom-unsigned.ipa
+          unzip -t build/artifacts/Mailroom-unsigned.ipa
     artifacts:
-      - build/ios/ipa/*.ipa
-      - /tmp/xcodebuild_logs/*.log
+      - build/artifacts/Mailroom-unsigned.ipa
+      - build/Mailroom.xcarchive/dSYMs/*.dSYM
 
   ios-simulator:
     name: Mailroom iOS - Simulator
