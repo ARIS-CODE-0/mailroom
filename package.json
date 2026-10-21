@@ -34,7 +34,7 @@
     "setup": "node scripts/setup.mjs",
     "server": "npm --prefix server start",
     "typecheck": "tsc --noEmit",
-    "test": "npm --prefix server test",
+    "test": "node --test tests/*.test.cjs && npm --prefix server test",
     "build": "expo export --platform web",
     "check": "npm run typecheck && npm test",
     "export:native": "expo export --platform ios --platform android --output-dir dist-native",

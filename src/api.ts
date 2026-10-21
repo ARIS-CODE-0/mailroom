@@ -39,6 +39,8 @@ export const api = {
     return !!token;
   },
   async request<T = any>(path: string, options: RequestInit = {}): Promise<T> {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 90000);
     let response: Response;
     try {
       response = await fetch(base + "/api" + path, {
@@ -48,12 +50,14 @@ export const api = {
           ...(token ? { Authorization: `Bearer ${token}` } : {}),
           ...options.headers,
         },
-        signal: AbortSignal.timeout(90000),
+        signal: controller.signal,
       });
     } catch {
       throw new Error(
         "Serveur inaccessible. Vérifie son adresse et ta connexion.",
       );
+    } finally {
+      clearTimeout(timeout);
     }
     const data = await response
       .json()
