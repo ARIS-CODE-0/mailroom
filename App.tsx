@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
+  Image,
   Modal,
   Platform,
   Pressable,
@@ -319,9 +320,11 @@ function MailApp() {
     return (
       <SafeAreaView style={s.login}>
         <View style={s.loginCard}>
-          <View style={s.logo}>
-            <Icon name="at-sign" color="white" size={29} />
-          </View>
+          <Image
+            source={require("./assets/brand-icon.png")}
+            style={s.logo}
+            accessibilityLabel="Mailroom"
+          />
           <Text style={s.loginTitle}>{productTagline}</Text>
           <Text style={s.loginText}>
             Bienvenue dans {productName}. Retrouve tes échanges et toutes tes
@@ -363,9 +366,11 @@ function MailApp() {
   const sidebar = (
     <View style={s.sidebar}>
       <View style={s.brand}>
-        <View style={s.brandMark}>
-          <Icon name="at-sign" color="white" size={22} />
-        </View>
+        <Image
+          source={require("./assets/brand-icon.png")}
+          style={s.brandMark}
+          accessibilityLabel="Mailroom"
+        />
         <Text style={s.brandText}>{productName.toLowerCase()}</Text>
       </View>
       <Text style={s.workspaceLabel}>ESPACE PERSONNEL</Text>

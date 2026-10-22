@@ -25,9 +25,7 @@ export const s = StyleSheet.create({
     width: 34,
     height: 34,
     borderRadius: 10,
-    backgroundColor: "#294B75",
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: C.blue,
   },
   brandText: {
     color: "white",
@@ -345,8 +343,6 @@ export const s = StyleSheet.create({
     width: 54,
     height: 54,
     borderRadius: 16,
-    alignItems: "center",
-    justifyContent: "center",
   },
   loginTitle: {
     fontSize: 30,
